@@ -124,6 +124,7 @@ plot_q3
 
 ## Answer 3
 
+The histogram is shaped like a downward sloping curve. It appears that most of the House candidates did not have more than 10 million ad impressions on Facebook.
 
 
 \newpage
