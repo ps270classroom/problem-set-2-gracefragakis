@@ -70,13 +70,14 @@ Use `knitr::kable()` to produce a nicely formatted table. In this call, set the 
 
 ```{r}
 
-party_incumbent_promote <- 
+filter_q2 <- 
   fb_ads |>
+  filter(office %in% c('US House', 'US Senate'))
+
+party_incumbent_promote <- 
+  filter_q2 |>
   group_by(party, incumbency) |>
   summarise(promote_prop = mean(ad_tone_promote, na.rm = TRUE))
-    
-  
-party_incumbent_promote
 
 knitr::kable(party_incumbent_promote, col.names = c("Party", "Incumbency Status", 'Promote Average'))
 ```
@@ -102,7 +103,8 @@ Create a histogram of this variable for just the US House races. Save the ggplot
 ```{r}
 library(ggplot2)
 
-fb_ads$impressions_millions <- fb_ads$impressions / 1000000
+fb_ads <- fb_ads %>%
+  mutate(impressions_millions = impressions / 1000000)
   
 house_filter <- 
   fb_ads |>
@@ -154,15 +156,14 @@ t_15_candidates <-
   mutate(cand_name_last = factor(cand_name_last, levels = rev(cand_name_last)))
   
 fb_top_plot <-
-  ggplot(t_15_candidates, aes(x=impressions_millions, y = cand_name_last, fill = party)) + 
-  geom_bar(stat = 'identity') +
+  ggplot(t_15_candidates, aes(x=impressions_millions, y = cand_name_last)) + 
+  geom_bar(aes(fill = party), stat = 'identity') +
   scale_fill_manual(values = c(R = "red", D = "blue")) +
   labs(x = "Facebook Ad Impressions (Millions)", 
        y = "Candidates (Last Name)",
        title= "Top 15 US House Candidates by Facebook Ad Impressions")
   
 fb_top_plot
-
 
 ```
 
